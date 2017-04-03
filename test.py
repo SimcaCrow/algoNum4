@@ -15,10 +15,9 @@ import matplotlib.pyplot as plt
 # Test
 # ---------------------------------#
 
-
 # ---------------------------------#
 if __name__ == '__main__':
 
-    print("Test")
+    print("Test de Newton_Raphson")
 
 # ---------------------------------#
