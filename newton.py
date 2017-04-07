@@ -11,31 +11,36 @@ Description : 4ième TD algorithme numerique
 import numpy as np
 
 # ---------------------------------#
-
+"""
+Question 1
+H(U)*V = -F(V)
+"""
 def Newton_Raphson(f, J, U0, N, epsilon):
     U = np.copy(U0)
     for i in range(N):
-        if np.all(abs(f(U)) < epsilon):
-            return U
         fu = f(U)
+        na = np.linalg.norm(fu)
+        if (na < epsilon):
+            return U
         ju = J(U)
-        tmp = np.linalg.lstsq(ju, -fu)
-        V = tmp[0]
-        U = U+V
-    assert(False and "precision non atteinte")
+        V = np.linalg.lstsq(ju, -fu)[0] 
+        U = U + V
+    print("ERREUR : precision non atteinte")
+    return U
 
-def Newton_Raphson_back(f, J, x0, N, epsilon):
-    x = x0
+def Newton_Raphson_back(f, J, U0, N, epsilon):
+    U = np.copy(U0)
     for i in range(N):
-        print(i)
-        va = f(x)
-        na = np.linalg.norm(va)
-        if na < epsilon:
-            return x
-        dv = J(x)
-        dx = np.linalg.lstsq(dv,-va)[0]
+        fu = f(U)
+        na = np.linalg.norm(fu)
+        if (na < epsilon):
+            return U
+        ju = J(U)
+        V = np.linalg.lstsq(ju,-fu)[0]
+        
         st = 1.0
-        while np.linalg.norm(f(x+st*dx)) >= na+0.001:
-            st *= 2.0/3.0
-        x += st*dx
-    assert(False and "precision non atteinte")
+        while (np.linalg.norm(f(U+st*V)) >= na + 0.001):
+            st *= 1.0/3.0
+        U = U + st*V
+    print("ERREUR : precision non atteinte")
+    return U
