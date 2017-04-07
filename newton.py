@@ -38,9 +38,8 @@ def Newton_Raphson_back(f, J, U0, N, epsilon):
         ju = J(U)
         V = np.linalg.lstsq(ju,-fu)[0]
         
-        st = 1.0
-        while (np.linalg.norm(f(U+st*V)) >= na + 0.001):
-            st *= 1.0/3.0
-        U = U + st*V
+        if(np.linalg.norm(f(U+V)) - na >= 0):
+            V = (1.0/3.0) * V
+        U = U + V
     print("ERREUR : precision non atteinte")
     return U
