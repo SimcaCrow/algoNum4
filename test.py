@@ -10,7 +10,9 @@ Description : 4ième TD algorithme numerique
 
 import numpy as np
 import matplotlib.pyplot as plt
+
 from newton import *
+from electrostatic_equilibrium import *
 
 # ---------------------------------#
 # Test
@@ -43,9 +45,38 @@ def Newton_Raphson_Test():
     U = Newton_Raphson_back(f2, J2, x2, 1000, pres)
     assert(np.linalg.norm(f2(U)) < pres)
     print("Test OK")
+
+def Elec_Equ_Test():
+    A = np.matrix([[0.2]])
+    
+    B = np.matrix([[0.4],
+                   [-0.4],
+                   [0.5],
+                   [0.6]])
+    
+    C = np.matrix([[0.5],
+                   [0.6]])
+    
+    W = np.matrix([[0.4],
+                   [-0.5],
+                   [0.7]])
+    
+    U = np.matrix([[0.1],
+                   [-0.5],
+                   [0.3],
+                   [-0.9],
+                   [-0.8]])
+
+
+    
+    x = np.linspace(-1,1)
+    plt.plot([-1,1], [0,0], 'k')
+    plt.axis([-1,1,-15,15])
+    plt.show()
     
 # ---------------------------------#
 if __name__ == '__main__':
 
     Newton_Raphson_Test()
+    Elec_Equ_Test()
 # ---------------------------------#

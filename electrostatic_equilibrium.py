@@ -10,6 +10,8 @@ Description : 4ième TD algorithme numerique
 
 from newton import *
 import numpy as np
+import matplotlib.pyplot as plt
+import numpy.polynomial.legendre as L
 
 # ---------------------------------#
 
@@ -37,3 +39,17 @@ def pos_equilibre(n):
     eps = 10**-5
     U = Newton_Raphson_back(grad_E, J, U0, N, eps)
     return U
+
+# plot le polynome de legendre avec la couleur et le label pour le rang n
+def add_legendre(n,lbl,clr):
+    R = pos_equilibre(n)
+    """
+    add_graph_V(R,clr)
+    c=legendre(R.size+1)
+    d=L.legder(c)
+    P=L.leg2poly(d)
+    P=miroir(P)
+    Poly=poly1d(P)
+    x=linspace(-1,1,100)
+    y=Poly(x)
+    plt.plot(x,y,label=lbl,color=clr)"""
