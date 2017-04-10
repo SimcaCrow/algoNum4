@@ -28,6 +28,23 @@ def grad_E(X):
         res[i, 0] = 1./X[i,0]+1 + 1./X[i,0]-1 + s
     return res
 
+# Calcul du jacobien du gradient de l'energie
+# On calcule le terme i,j
+# X vecteur de positions
+def jacobien_grad_E_ij(X, i, j):
+    N = np.shape(X)
+    jac_ij = 0
+    if ( i == j ):
+        jac__ij -= 1/((X[i,0] + 1)*(X[i,0] + 1))
+        jac__ij -= 1/((X[i,0] - 1)*(X[i,0] - 1))
+        for k in range (N):
+            if ( k != i ):
+                jac__ij += 1/((X[k,0] - X[i,0])*(X[k,0] - X[i,0]))
+    else:
+        jac__ij = -1/((X[j,0] - X[i,0])*(X[j,0] - X[i,0]))
+    return jac__ij
+
+
 # Calcul de la position d'équilibre pour
 # n charges
 # retourne le vecteur des positions
