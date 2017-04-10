@@ -12,18 +12,14 @@ import numpy as np
 
 # ---------------------------------#
 
-def Jacobian_Delta_E(X):
+def Grad_E(X):
     n, m = np.shape(X)
     assert(m == 1)
-    res = np.mat(np.zeros((n, n)))
+    res = np.zeros((n,1))
     for i in range(n):
+        s = 0
         for j in range(n):
-            if i != j:
-                res[i, j] = -1.0/((abs(x[i, 0] - x[j, 0])**2)*np.log(10.0))
-            else:
-                res[i, j] -= 1.0/(abs(x[i, 0]+1)**2) + 1.0/(abs(x[i, 0]-1)**2)
-                for k in range(0,n):
-                    if k != i:
-                        res[i, j] -= 1.0/(abs(x[i, 0] - x[k, 0])**2)
-                        res[i, j] *= 1.0/np.log(10.0)
-            return res
+            if (i != j):
+                s += 1./(X[i,0] - X[j,0])
+        res[i, 0] = 1./(X[i,0]+1) + 1./(X[i,0]-1) + s
+    return res
