@@ -33,23 +33,39 @@ def grad_E(X):
 # Calcul de la position d'équilibre pour
 # n charges
 # retourne le vecteur des positions
-def pos_equilibre(n):
-    U0 = np.zeros((n,0))
+def pos_equilibre(X):
     N = 1000
     eps = 10**-5
-    U = Newton_Raphson_back(grad_E, J, U0, N, eps)
+    U = Newton_Raphson_back(grad_E, JACOBIEN, X, N, eps)
     return U
 
-# plot le polynome de legendre avec la couleur et le label pour le rang n
-def add_legendre(n,lbl,clr):
-    R = pos_equilibre(n)
-    """
-    add_graph_V(R,clr)
-    c=legendre(R.size+1)
-    d=L.legder(c)
-    P=L.leg2poly(d)
-    P=miroir(P)
-    Poly=poly1d(P)
-    x=linspace(-1,1,100)
-    y=Poly(x)
-    plt.plot(x,y,label=lbl,color=clr)"""
+def echange(A,i,j):
+    tmp = A[i]
+    A[i] = A[j]
+    A[j] = tmp
+    
+def miroir(A):
+    n = A.size
+    for i in range(n/2):
+        echange(A,i,n-i-1)
+    return A
+
+# Plot le polynome de legendre avec la couleur et le label pour le rang n
+# Ainsi que les points d'equilibre d'energie
+def add_plot(X, lbl, clr):
+    n = X.size
+    R = pos_equilibre(X)
+    z = np.zeros(n)
+    plt.plot(R, z, type='o', color=clr)
+    
+    c = [0]*(n+2)
+    c[n+1] = 1
+    
+    d = L.legder(c)
+    P = L.leg2poly(d)
+    
+    P = miroir(P)
+    Poly = poly1d(P)
+    x = linspace(-1,1,100)
+    y = Poly(x)
+    plt.plot(x, y, label=lbl, color=clr)

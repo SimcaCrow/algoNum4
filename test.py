@@ -49,25 +49,23 @@ def Newton_Raphson_Test():
 def Elec_Equ_Test():
     A = np.matrix([[0.2]])
     
-    B = np.matrix([[0.4],
+    
+    B = np.matrix([[0.5],
+                   [0.6]])
+    
+    C = np.matrix([[0.4],
+                   [-0.5],
+                   [0.7]])
+
+    D = np.matrix([[0.4],
                    [-0.4],
                    [0.5],
                    [0.6]])
-    
-    C = np.matrix([[0.5],
-                   [0.6]])
-    
-    W = np.matrix([[0.4],
-                   [-0.5],
-                   [0.7]])
-    
-    U = np.matrix([[0.1],
-                   [-0.5],
-                   [0.3],
-                   [-0.9],
-                   [-0.8]])
 
-
+    add_plot(A, 'n=1', 'g')
+    add_plot(B, 'n=2', 'b')
+    add_plot(C, 'n=3', 'y')
+    add_plot(D, 'n=4', 'r')
     
     x = np.linspace(-1,1)
     plt.plot([-1,1], [0,0], 'k')
