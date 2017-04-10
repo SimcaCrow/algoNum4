@@ -13,7 +13,7 @@ import numpy as np
 # ---------------------------------#
 """
 Question 1
-H(U)*V = -F(V)
+H(U)*V = -F(U)
 """
 def Newton_Raphson(f, J, U0, N, epsilon):
     U = np.copy(U0)
