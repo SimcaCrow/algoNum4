@@ -69,3 +69,12 @@ def add_plot(X, lbl, clr):
     x = np.linspace(-1,1,100)
     y = Poly(x)
     plt.plot(x, y, label=lbl, color=clr)
+
+"""
+Notes pour le rapport :
+Quand tu lances le test.py, il y a les tests de newton-Raphson puis
+ceux de ce fichier. Ca te sort un graphique avec les points d'equilibre pour
+1,2,3 et 4 charges et les courbes des polynomes de Legendre. (Normalement) les*
+polynomes de Legendre s'annulent aux memes endroit que les positions 
+d'equilibre des charges
+"""
