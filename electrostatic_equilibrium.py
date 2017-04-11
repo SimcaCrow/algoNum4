@@ -36,7 +36,7 @@ def grad_E(X):
 def pos_equilibre(X):
     N = 1000
     eps = 10**-5
-    U = Newton_Raphson_back(grad_E, JACOBIEN, X, N, eps)
+    U = Newton_Raphson_back(grad_E, JACOBIEN, X, N, eps) #TODO : rajouter le jacobien
     return U
 
 def echange(A,i,j):
@@ -65,7 +65,7 @@ def add_plot(X, lbl, clr):
     P = L.leg2poly(d)
     
     P = miroir(P)
-    Poly = poly1d(P)
-    x = linspace(-1,1,100)
+    Poly = np.poly1d(P)
+    x = np.linspace(-1,1,100)
     y = Poly(x)
     plt.plot(x, y, label=lbl, color=clr)

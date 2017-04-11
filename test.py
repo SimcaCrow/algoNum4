@@ -70,6 +70,8 @@ def Elec_Equ_Test():
     x = np.linspace(-1,1)
     plt.plot([-1,1], [0,0], 'k')
     plt.axis([-1,1,-15,15])
+    plt.legend()
+    plt.title("Polynomes de Legendre et positions d'equilibre")
     plt.show()
     
 # ---------------------------------#
