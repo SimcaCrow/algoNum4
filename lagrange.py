@@ -10,90 +10,92 @@ Description : 4ième TD algorithme numerique
 
 import numpy as np
 from math import *
+from newton import  *
+import matplotlib.pyplot as plt
 
 # ---------------------------------#
 
-def elastic_force(k):
-    return lambda v: [-k * v[0], v[1]]
+# Three Forces
+elastic_force = lambda v, k: [-k * v[0], v[1]]
+
+centrifugal_force =  lambda v, k, v0 : k * (v - v0)
+
+gravitational_force = lambda v, k, v0 : -k * (v - v0) / pow(np.linalg.norm(v - v0), 3)
 
 # ---------------------------------#
 
-def centrifugal_force(k, v0):
-    return lambda v : [k * (v[0] - v0[0]), k * (v[1] - v0[1])]
+# Jacobians
+elastic_jac = lambda k : [[-k,0], [0, 1]]
+
+centrifugal_jac = lambda k: [[k,0], [0, k]]
+
+gravitational_jac = lambda v, k, v0 : [[-k * ((v[1] - v0[1])**2 - 2*(v[0]-v0[0])**2) / (((v[0]-v0[0])**2 + (v[1]-v0[1])**2)**(5/2)),
+                                       (3*k * (v[0]-v0[0]) * (v[1]-v0[1])) / (((v[0]-v0[0])**2 + (v[1]-v0[1])**2)**(5/2))],
+                                       [(3*k * (v[0]-v0[0]) * (v[1]-v0[1])) / (((v[0]-v0[0])**2 + (v[1]-v0[1])**2)**(5/2)),
+                                       -k * ((v[0] - v0[0])**2 - 2*(v[1]-v0[1])**2) / (((v[0]-v0[0])**2 + (v[1]-v0[1])**2)**(5/2))]]
 
 # ---------------------------------#
-
-def gravitational_force(k, v0):
-    x = -k * ((v[0]-v0[0]) / pow(((v[0]-v0[0])**2 + (v[1]-v0[1])**2), 3/2))
-    y = -k * ((v[1]-v0[1]) / pow(((v[0]-v0[0])**2 + (v[1]-v0[1])**2), 3/2))
-    return lambda v : [x,y]
-
-# ---------------------------------#
-
-def elastic_jac(k):
-    return lambda v : [[-k,0], [0, 1]]
+"""
+Adding 3-force test
+"""
+def add_force(u):
+    f1 = gravitational_force(u, 1, np.array([0, 0]))
+    f2 = gravitational_force(u, 0.01, np.array([1, 0]))
+    f3 = centrifugal_force(u, 1, np.array([0.0099009900990099, 0]))
+    return f1 + f2 + f3
 
 # ---------------------------------#
-
-def centrifugal_jac(k):
-    return lambda v : [[k,0], [0, k]]
-
-# ---------------------------------#
-
-def gravitational_jac(k, v0):
-    xx = -k * ((v[1] - v0[1])**2 - 2*(v[0]-v0[0])**2) / (((v[0]-v0[0])**2 + (v[1]-v0[1])**2)**(5/2))
-    yx = (3*k * (v[0]-v0[0]) * (v[1]-v0[1])) / (((v[0]-v0[0])**2 + (v[1]-v0[1])**2)**(5/2))
-    xy = (3*k * (v[0]-v0[0]) * (v[1]-v0[1])) / (((v[0]-v0[0])**2 + (v[1]-v0[1])**2)**(5/2))
-    yy = -k * ((v[0] - v0[0])**2 - 2*(v[1]-v0[1])**2) / (((v[0]-v0[0])**2 + (v[1]-v0[1])**2)**(5/2))
-    return lambda v: [[xx, yx],[xy, yy]]
+"""
+Adding 3-Jacobian test
+"""
+def add_jac(u):
+    j1 = gravitational_jac(u, 1, np.array([0, 0]))
+    j2 = gravitational_jac(u, 0.01, np.array([1, 0]))
+    j3 = centrifugal_jac(1)
+    return np.array(j1) + np.array(j2) + np.array(j3)
 
 # ---------------------------------#
+"""
+Compute each equilibrium point to obtain Lagrangian points
+"""
+def lagrangian_points():
+    pres = 10 ** -10
+    n = 1000
 
-def newton_on_force(k, v0):
-    u = [1.5,0]
-    f = [1.00565457,0]
+    L1 = np.array([0.75, 0])
+    L2 = np.array([1.15, 0])
+    L3 = np.array([-1, 0])
+    L4 = np.array([0.5, 0.75])
+    L5 = np.array([0.5, -0.75])
 
-# ---------------------------------#
+    tab_points = [L1, L2, L3, L4, L5]
+    names = ["L1", "L2", "L3", "L4", "L5"]
+    equilibrium_point = [0,0,0,0,0]
 
-def start_test(name):
-    print("...", name, "\n#" + '-' * 25 + "#")
+    for i in range(len(tab_points)):
+        equilibrium_point[i] = newton_raphson_back(add_force, add_jac, tab_points[i], n, pres)
 
-# ---------------------------------#
-
-def end_test(name):
-    print("#" + '-' * 25 + "#\n", name ,"... Ok\n")
-
-# ---------------------------------#
-
-def test_force(k, v, v0):
-    start_test(test_force.__name__)
-    print("Elastic force for k = ", k, " : ", elastic_force(k)(v))
-    print("Centrifugal force for k = ", k, "and v0 = ", v0, " : ", centrifugal_force(k, v0)(v))
-    print("Gravitational force for k = ", k, "and v0 = ", v0, " : ", gravitational_force(k, v0)(v))
-    end_test(test_force.__name__)
+    lagrangian_points_plot(equilibrium_point, names)
 
 # ---------------------------------#
+"""
+Plot Lagrangian points on a graph
+"""
+def lagrangian_points_plot(points, names):
+    plt.plot(0,0, 'yo')
+    plt.text(-0.05, 0.1, 'Sun')
+    plt.plot(1,0, 'bo')
+    plt.text(0.9, 0.1, 'Earth')
 
-def test_jac(k, v, v0):
-    start_test(test_jac.__name__)
-    print("Elastic Jacobian for k = ", k, " : ", elastic_jac(k)(v))
-    print("Centrifugal Jacobian for k = ", k, "and v0 = ", v0, " : ", centrifugal_jac(k)(v))
-    print("Gravitational Jacobian for k = ", k, "and v0 = ", v0, " : ", gravitational_jac(k, v0)(v))
-    end_test(test_jac.__name__)
+    for i in range(len(points)):
+        plt.plot(points[i][0], points[i][1], 'ro')
+        plt.text(points[i][0]-0.05, points[i][1]-0.15, names[i])
 
-# ---------------------------------#
-if __name__ == '__main__':
-
-    k = 1
-    v =  np.array([1, 2]) # FIX ME
-    v0 = np.array([0,0])
-    test_force(k, v, v0)
-    test_jac(k, v, v0)
-
-    k = 0.01
-    v = np.array([1, 2])
-    v0 = np.array([1, 0])
-    test_force(k, v, v0)
-    test_jac(k, v, v0)
+    ax = plt.gca()
+    circle = plt.Circle((0, 0), 1, color='k', fill=False)
+    ax.add_artist(circle)
+    plt.axis([-1.5, 1.5, -1.5, 1.5])
+    plt.title("Lagrangian Points")
+    plt.show()
 
 # ---------------------------------#
