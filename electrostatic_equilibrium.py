@@ -14,10 +14,11 @@ import matplotlib.pyplot as plt
 import numpy.polynomial.legendre as L
 
 # ---------------------------------#
-
-# Calcul du gradient de l'energie
-# X : un vecteur de positions
-# renvoie un vecteur
+"""
+Calculation of the energy gradient
+X : a position vector
+Return a vector
+"""
 def grad_E(X):
     n, m = np.shape(X)
     assert(m == 1)
@@ -30,12 +31,14 @@ def grad_E(X):
         res[i, 0] = 1./X[i,0]+1 + 1./X[i,0]-1 + s
     return res
 
-# Calcul du jacobien du gradient de l'energie
-# On calcule le terme i,j
-# X vecteur de positions
-def jacobien_grad_E_ij(X, i, j):
+# ---------------------------------#
+"""
+Jacobian calculation of the energy gradient
+Terms i,j are calculated
+X : a position vector
+"""
+def jacobian_grad_E_ij(X, i, j):
     N = np.shape(X)
-    jac_ij = 0
     if ( i == j ):
         jac__ij -= 1/((X[i,0] + 1)*(X[i,0] + 1))
         jac__ij -= 1/((X[i,0] - 1)*(X[i,0] - 1))
@@ -46,32 +49,36 @@ def jacobien_grad_E_ij(X, i, j):
         jac__ij = -1/((X[j,0] - X[i,0])*(X[j,0] - X[i,0]))
     return jac__ij
 
-
-# Calcul de la position d'équilibre pour
-# n charges
-# retourne le vecteur des positions
-def pos_equilibre(X):
+# ---------------------------------#
+"""
+Calculation of the equilibrium position for n charges
+Return a position vector
+"""
+def pos_equilibrium(X):
     N = 1000
     eps = 10**-5
-    U = Newton_Raphson_back(grad_E, JACOBIEN, X, N, eps) #TODO : rajouter le jacobien
+    U = newton_raphson_back(grad_E, JACOBIAN, X, N, eps) #TODO : add jacobian
     return U
 
-def echange(A,i,j):
+def exchange(A,i,j):
     tmp = A[i]
     A[i] = A[j]
     A[j] = tmp
     
-def miroir(A):
+def mirror(A):
     n = A.size
     for i in range(n/2):
-        echange(A,i,n-i-1)
+        exchange(A,i,n-i-1)
     return A
 
-# Plot le polynome de legendre avec la couleur et le label pour le rang n
-# Ainsi que les points d'equilibre d'energie
+# ---------------------------------#
+"""
+Plot Legendre polynomials with color and label for rank n
+And equilibrium points of energy
+"""
 def add_plot(X, lbl, clr):
     n = X.size
-    R = pos_equilibre(X)
+    R = pos_equilibrium(X)
     z = np.zeros(n)
     plt.plot(R, z, type='o', color=clr)
     
@@ -81,17 +88,10 @@ def add_plot(X, lbl, clr):
     d = L.legder(c)
     P = L.leg2poly(d)
     
-    P = miroir(P)
+    P = mirror(P)
     Poly = np.poly1d(P)
     x = np.linspace(-1,1,100)
     y = Poly(x)
     plt.plot(x, y, label=lbl, color=clr)
 
-"""
-Notes pour le rapport :
-Quand tu lances le test.py, il y a les tests de newton-Raphson puis
-ceux de ce fichier. Ca te sort un graphique avec les points d'equilibre pour
-1,2,3 et 4 charges et les courbes des polynomes de Legendre. (Normalement) les*
-polynomes de Legendre s'annulent aux memes endroit que les positions 
-d'equilibre des charges
-"""
+# ---------------------------------#
