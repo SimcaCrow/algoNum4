@@ -12,10 +12,9 @@ import numpy as np
 
 # ---------------------------------#
 """
-Question 1
-H(U)*V = -F(U)
+Newton Raphson Implementation
 """
-def Newton_Raphson(f, J, U0, N, epsilon):
+def newton_raphson(f, J, U0, N, epsilon):
     U = np.copy(U0)
     for i in range(N):
         fu = f(U)
@@ -25,10 +24,14 @@ def Newton_Raphson(f, J, U0, N, epsilon):
         ju = J(U)
         V = np.linalg.lstsq(ju, -fu)[0] 
         U = U + V
-    print("ERREUR : precision non atteinte")
+    print("ERROR : precision not reached")
     return U
 
-def Newton_Raphson_back(f, J, U0, N, epsilon):
+# ---------------------------------#
+"""
+Newton Raphson Implementation with Backtracking
+"""
+def newton_raphson_back(f, J, U0, N, epsilon):
     U = np.copy(U0)
     for i in range(N):
         fu = f(U)
@@ -41,5 +44,7 @@ def Newton_Raphson_back(f, J, U0, N, epsilon):
         if(np.linalg.norm(f(U+V)) - na >= 0):
             V = (1.0/3.0) * V
         U = U + V
-    print("ERREUR : precision non atteinte")
+    print("ERROR : precision not reached")
     return U
+
+# ---------------------------------#
