@@ -37,17 +37,29 @@ Jacobian calculation of the energy gradient
 Terms i,j are calculated
 X : a position vector
 """
+
 def jacobian_grad_E_ij(X, i, j):
-    N = np.shape(X)
+    N = X.size
     if ( i == j ):
-        jac__ij -= 1/((X[i,0] + 1)*(X[i,0] + 1))
-        jac__ij -= 1/((X[i,0] - 1)*(X[i,0] - 1))
+        jac__ij = 0
+        jac__ij -= 1.0/((X[i,0] + 1)*(X[i,0] + 1))
+        jac__ij -= 1.0/((X[i,0] - 1)*(X[i,0] - 1))
         for k in range (N):
             if ( k != i ):
-                jac__ij += 1/((X[k,0] - X[i,0])*(X[k,0] - X[i,0]))
+                jac__ij += 1.0/((X[i,0] - X[k,0])*(X[i,0] - X[k,0]))
     else:
-        jac__ij = -1/((X[j,0] - X[i,0])*(X[j,0] - X[i,0]))
+        jac__ij = -1.0/((X[i,0] - X[j,0])*(X[i,0] - X[j,0]))
     return jac__ij
+
+def jacobian_grad_E(X):
+    N = X.size
+    J = np.zeros((N,N))
+    for i in range(N):
+        for j in range(N):
+            J[i,j] = jacobian_grad_E_ij(X, i, j)
+    return J
+
+ 
 
 # ---------------------------------#
 """
@@ -57,7 +69,7 @@ Return a position vector
 def pos_equilibrium(X):
     N = 1000
     eps = 10**-5
-    U = newton_raphson_back(grad_E, JACOBIAN, X, N, eps) #TODO : add jacobian
+    U = newton_raphson(grad_E, jacobian_grad_E, X, N, eps) #TODO : add jacobian
     return U
 
 def exchange(A,i,j):
@@ -76,18 +88,18 @@ def mirror(A):
 Plot Legendre polynomials with color and label for rank n
 And equilibrium points of energy
 """
-def add_plot(X, lbl, clr):
-    n = X.size
-    R = pos_equilibrium(X)
-    z = np.zeros(n)
-    plt.plot(R, z, type='o', color=clr)
+def add_plot(X, lbl, clr, type='o'):
+    Peq = pos_equilibrium(X)
+    n= Peq.size
+    for i in range(n):
+        plt.plot(Peq[i,0],0,type, color=clr)
     
     c = [0]*(n+2)
     c[n+1] = 1
     
     d = L.legder(c)
     P = L.leg2poly(d)
-    
+
     P = mirror(P)
     Poly = np.poly1d(P)
     x = np.linspace(-1,1,100)
@@ -95,3 +107,4 @@ def add_plot(X, lbl, clr):
     plt.plot(x, y, label=lbl, color=clr)
 
 # ---------------------------------#
+

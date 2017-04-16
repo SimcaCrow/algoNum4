@@ -53,31 +53,34 @@ def newton_raphson_test():
 """
 Electrostatic Equilibrium Test
 """
-def elec_equ_test():
-    A = np.matrix([[0.2]])
+#def elec_equ_test():
 
-    B = np.matrix([[0.5],
-                   [0.6]])
-    
-    C = np.matrix([[0.4],
-                   [-0.5],
-                   [0.7]])
+A = np.matrix([[0.2]])
 
-    D = np.matrix([[0.4],
-                   [-0.4],
-                   [0.5],
-                   [0.6]])
+B = np.matrix([[0.5],
+               [0.6]])
 
-    add_plot(A, 'n=1', 'g')
-    add_plot(B, 'n=2', 'b')
-    add_plot(C, 'n=3', 'y')
-    add_plot(D, 'n=4', 'r')
+C = np.matrix([[0.4],
+               [-0.5],
+               [0.7]])
 
-    plt.plot([-1,1], [0,0], 'k')
-    plt.axis([-1,1,-15,15])
-    plt.legend()
-    plt.title("Legendre polynomials and equilibrium positions")
-    plt.show()
+D = np.matrix([[0.4],
+               [-0.4],
+               [0.5],
+               [0.6]])
+
+add_plot(A, 'n=1', 'r')
+add_plot(B, 'n=2', 'y')
+add_plot(C, 'n=3', 'b')
+add_plot(D, 'n=4', 'g')
+
+plt.plot([-1,1], [-0,0], 'k')
+plt.axis([-1,1,-15,15])
+plt.xlabel("x")
+plt.ylabel("y")
+plt.legend()
+plt.title("Legendre polynomials and equilibrium positions")
+plt.show()
 
 # ---------------------------------#
 """
