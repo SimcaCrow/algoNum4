@@ -53,34 +53,34 @@ def newton_raphson_test():
 """
 Electrostatic Equilibrium Test
 """
-#def elec_equ_test():
+def elec_equ_test():
 
-A = np.matrix([[0.2]])
+    A = np.matrix([[0.2]])
 
-B = np.matrix([[0.5],
-               [0.6]])
+    B = np.matrix([[0.5],
+                   [0.6]])
 
-C = np.matrix([[0.4],
-               [-0.5],
-               [0.7]])
+    C = np.matrix([[0.4],
+                   [-0.5],
+                   [0.7]])
 
-D = np.matrix([[0.4],
-               [-0.4],
-               [0.5],
-               [0.6]])
+    D = np.matrix([[0.4],
+                   [-0.4],
+                   [0.5],
+                   [0.6]])
 
-add_plot(A, 'n=1', 'r')
-add_plot(B, 'n=2', 'y')
-add_plot(C, 'n=3', 'b')
-add_plot(D, 'n=4', 'g')
+    add_plot(A, 'n=1', 'r')
+    add_plot(B, 'n=2', 'y')
+    add_plot(C, 'n=3', 'b')
+    add_plot(D, 'n=4', 'g')
 
-plt.plot([-1,1], [-0,0], 'k')
-plt.axis([-1,1,-15,15])
-plt.xlabel("x")
-plt.ylabel("y")
-plt.legend()
-plt.title("Legendre polynomials and equilibrium positions")
-plt.show()
+    plt.plot([-1,1], [0,0], 'k')
+    plt.axis([-1,1,-15,15])
+    plt.xlabel("x")
+    plt.ylabel("y")
+    plt.legend()
+    plt.title("Legendre polynomials and equilibrium positions")
+    plt.show()
 
 # ---------------------------------#
 """
@@ -117,7 +117,7 @@ def forces_test():
     print("Test forces sum")
     force = np.array([1.00565457, 0])
     own_force = add_force(u)
-    print("Expected f(U)=", force, "Our f(U) =", own_force)
+    print("Expected f(U)=", force, "\nOur f(U) =", own_force)
     np.testing.assert_almost_equal(force, own_force,8) # Erreur d'arrondi machine au dela de 8 decimales
     print("Test OK\n")
 
@@ -130,7 +130,7 @@ def jacobians_test():
     u = np.array([1.5, 0])
     jac = np.array([[1.75259259, 0], [0, 0.6237037]])
     own_jac = add_jac(u)
-    print("Expected df(U)=", jac, "Our df(U) =", own_jac)
+    print("Expected df(U)=", jac, "\nOur df(U) =", own_jac)
     np.testing.assert_almost_equal(jac, own_jac, 8)
     print("Test OK\n")
 
@@ -138,7 +138,7 @@ def jacobians_test():
 if __name__ == '__main__':
 
     newton_raphson_test()
-    # elec_equ_test()
+    elec_equ_test()
     forces_test()
     jacobians_test()
     lagrangian_points()
