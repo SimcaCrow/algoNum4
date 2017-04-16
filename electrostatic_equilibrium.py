@@ -21,14 +21,14 @@ Return a vector
 """
 def grad_E(X):
     n, m = np.shape(X)
-    assert(m == 1)
-    res = np.zeros((n,1))
+    assert (m == 1)
+    res = np.zeros([n,1])
     for i in range(n):
         s = 0
         for j in range(n):
             if (i != j):
-                s += 1./(X[i,0] - X[j,0])
-        res[i, 0] = 1./X[i,0]+1 + 1./X[i,0]-1 + s
+                s += 1. / (X[i, 0] - X[j, 0])
+        res[i, 0] = 1. / (1 + X[i]) + 1. / (X[i] - 1) + s
     return res
 
 # ---------------------------------#
@@ -37,18 +37,15 @@ Jacobian calculation of the energy gradient
 Terms i,j are calculated
 X : a position vector
 """
-
 def jacobian_grad_E_ij(X, i, j):
-    N = X.size
+    N = np.shape(X)[0]
     if ( i == j ):
-        jac__ij = 0
-        jac__ij -= 1.0/((X[i,0] + 1)*(X[i,0] + 1))
-        jac__ij -= 1.0/((X[i,0] - 1)*(X[i,0] - 1))
+        jac__ij = -1/((X[i,0] + 1)*(X[i,0] + 1)) -1/((X[i,0] - 1)*(X[i,0] - 1))
         for k in range (N):
             if ( k != i ):
-                jac__ij += 1.0/((X[i,0] - X[k,0])*(X[i,0] - X[k,0]))
+                jac__ij -= 1/((X[i,0] - X[k,0])*(X[i,0] - X[k,0]))
     else:
-        jac__ij = -1.0/((X[i,0] - X[j,0])*(X[i,0] - X[j,0]))
+        jac__ij = 1/((X[i,0] - X[j,0])*(X[i,0] - X[j,0]))
     return jac__ij
 
 def jacobian_grad_E(X):
@@ -59,8 +56,6 @@ def jacobian_grad_E(X):
             J[i,j] = jacobian_grad_E_ij(X, i, j)
     return J
 
- 
-
 # ---------------------------------#
 """
 Calculation of the equilibrium position for n charges
@@ -68,8 +63,8 @@ Return a position vector
 """
 def pos_equilibrium(X):
     N = 1000
-    eps = 10**-5
-    U = newton_raphson(grad_E, jacobian_grad_E, X, N, eps) #TODO : add jacobian
+    eps = 10**-7
+    U = newton_raphson(grad_E, jacobian_grad_E, X, N, eps)
     return U
 
 def exchange(A,i,j):
@@ -79,7 +74,7 @@ def exchange(A,i,j):
     
 def mirror(A):
     n = A.size
-    for i in range(n/2):
+    for i in range(n//2):
         exchange(A,i,n-i-1)
     return A
 
@@ -107,4 +102,3 @@ def add_plot(X, lbl, clr, type='o'):
     plt.plot(x, y, label=lbl, color=clr)
 
 # ---------------------------------#
-
